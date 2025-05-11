@@ -17,34 +17,15 @@
       overflow: hidden;
     }
 
-    .loader {
-      display: flex;
-      gap: 0.5rem;
+    .loader-image {
+      width: 100px; /* ajuste o tamanho conforme necessário */
+      height: auto;
+      animation: blink 1s infinite;
     }
 
-    .dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background-color: #00bcd4;
-      animation: bounce 1.2s infinite ease-in-out;
-    }
-
-    .dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    .dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-
-    @keyframes bounce {
-      0%, 80%, 100% {
-        transform: scale(0);
-      }
-      40% {
-        transform: scale(1);
-      }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     .loading-text {
@@ -53,15 +34,15 @@
       font-size: 1.2rem;
       color: #bbb;
     }
+
+    .container {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div>
-    <div class="loader">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
+  <div class="container">
+    <img src="loader.png" alt="Loading..." class="loader-image" />
     <div class="loading-text">Loading, please wait...</div>
   </div>
 
