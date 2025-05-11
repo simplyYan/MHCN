@@ -306,12 +306,40 @@ let userCustomCSS = localStorage.getItem("mhcn_custom_css") || "";
 // ========== PREMIUM LOGIC ==========
 
 function enablePremium(apiKey) {
-    const url = `https://mhcn.42web.io/use_api.php?key=${encodeURIComponent(apiKey)}`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success === true) {
+    fetch('keys.json', {cache: "no-store"})
+        .then(response => {
+            if (!response.ok) throw new Error("Could not load keys.json");
+            return response.json();
+        })
+        .then(keys => {
+            // keys can be an array or object, handle both
+            let found = false;
+            let newKeys;
+            if (Array.isArray(keys)) {
+                const idx = keys.findIndex(k => k.key === apiKey);
+                if (idx !== -1) {
+                    found = true;
+                    // Remove the used key
+                    newKeys = keys.slice(0, idx).concat(keys.slice(idx + 1));
+                }
+            } else if (typeof keys === "object" && keys !== null) {
+                // If keys.json is an object (unlikely, but for safety)
+                if (Object.values(keys).some(k => k.key === apiKey)) {
+                    found = true;
+                    // Remove the key from the object
+                    newKeys = {};
+                    for (const [i, k] of Object.entries(keys)) {
+                        if (k.key !== apiKey) newKeys[i] = k;
+                    }
+                }
+            }
+            if (found) {
+                // Try to update keys.json to consume the key
+                fetch('keys.json', {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(newKeys)
+                }).catch(() => {/* ignore errors, best effort */});
                 isPremium = true;
                 premiumKey = apiKey;
                 localStorage.setItem("mhcn_premium", "1");
@@ -327,7 +355,7 @@ function enablePremium(apiKey) {
             }
         })
         .catch(error => {
-            console.error("⚠️ Error calling the API:", error);
+            console.error("⚠️ Error reading keys.json:", error);
             showPremiumToast("Error validating premium key.", true);
         });
 }
@@ -367,7 +395,7 @@ function updatePremiumUI() {
 
 // ========== PREMIUM OFFER TOAST & PUSH ==========
 
-const PREMIUM_OFFER_URL = "https://mhcn.42web.io/buy.php";
+const PREMIUM_OFFER_URL = "./buy.php";
 const PREMIUM_OFFER_INTERVAL = 3 * 60 * 60 * 1000; // 3 hours in ms
 
 function showPremiumOfferToast() {
