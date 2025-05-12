@@ -124,137 +124,446 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Bootstrap 5 CDN -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <style id="custom-theme-style">
-        body {
-            background: #181a1b;
-            color: #f1f1f1;
-            min-height: 100vh;
-        }
-        .mhcn-card {
-            background: #23272b;
-            border-radius: 1rem;
-            box-shadow: 0 2px 16px #000a;
-        }
-        .mhcn-btn {
-            background: #6f42c1;
-            color: #fff;
-            border: none;
-        }
-        .mhcn-btn:hover {
-            background: #5936a8;
-        }
-        .chatroom-list-item {
-            background: #23272b;
-            border: 1px solid #343a40;
-            border-radius: .5rem;
-            margin-bottom: .5rem;
-            padding: .75rem 1rem;
-            cursor: pointer;
-            transition: background .2s;
-        }
-        .chatroom-list-item:hover {
-            background: #343a40;
-        }
-        .chat-messages {
-            max-height: 60vh;
-            overflow-y: auto;
-            padding-bottom: 1rem;
-        }
-        .chat-message {
-            margin-bottom: 1.2rem;
-        }
-        .chat-message .author {
-            font-weight: bold;
-            color: #b983ff;
-        }
-        .chat-message .timestamp {
-            font-size: .85em;
-            color: #aaa;
-        }
-        .chat-message .text {
-            margin-top: .2rem;
-            word-break: break-word;
-        }
-        .chat-message img {
-            max-width: 200px;
-            max-height: 200px;
-            display: block;
-            margin-top: .5rem;
-            border-radius: .5rem;
-            background: #fff;
-        }
-        .mhcn-scrollbar::-webkit-scrollbar {
-            width: 8px;
-            background: #23272b;
-        }
-        .mhcn-scrollbar::-webkit-scrollbar-thumb {
-            background: #343a40;
-            border-radius: 4px;
-        }
-        .premium-badge {
-            display: inline-block;
-            background: #ffd700;
-            color: #23272b;
-            font-weight: bold;
-            border-radius: 0.5em;
-            padding: 0.1em 0.5em;
-            font-size: 0.9em;
-            margin-left: 0.5em;
-            vertical-align: middle;
-        }
-        .verified-badge {
-            color: #1da1f2;
-            margin-left: 0.3em;
-            font-size: 1em;
-            vertical-align: middle;
-        }
-        .fixed-message {
-            background: #2d2d3a;
-            border-left: 4px solid #6f42c1;
-            padding: 0.5em 1em;
-            margin-bottom: 1em;
-            border-radius: 0.5em;
-            font-weight: bold;
-        }
-        .chat-message .format-bold { font-weight: bold; }
-        .chat-message .format-italic { font-style: italic; }
-        .chat-message .format-underline { text-decoration: underline; }
-        @media (max-width: 600px) {
-            .mhcn-card {
-                border-radius: 0;
-                box-shadow: none;
-            }
-            .chat-messages {
-                max-height: 40vh;
-            }
-        }
-        /* Toast for premium offer */
-        .mhcn-premium-toast {
-            position: fixed;
-            bottom: 2em;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffd700;
-            color: #23272b;
-            padding: 1em 2em;
-            border-radius: 1em;
-            z-index: 99999;
-            font-weight: bold;
-            box-shadow: 0 2px 16px #000a;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.7em;
-            font-size: 1.05em;
-        }
-        .mhcn-premium-toast .mhcn-premium-star {
-            color: #ff9800;
-            font-size: 1.3em;
-        }
-        .mhcn-premium-toast .mhcn-premium-link {
-            color: #6f42c1;
-            text-decoration: underline;
-            font-weight: bold;
-            margin-left: 0.5em;
+/* ========== MODERN THEME FOR MADHATCHATNET ========== */
+:root {
+  --primary: #6c5ce7;
+  --primary-dark: #5649c0;
+  --secondary: #00cec9;
+  --dark: #2d3436;
+  --darker: #1e272e;
+  --light: #f5f6fa;
+  --danger: #ff7675;
+  --warning: #fdcb6e;
+  --success: #55efc4;
+  --info: #74b9ff;
+  --text-primary: #f5f6fa;
+  --text-secondary: #dfe6e9;
+  --border-radius: 12px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --transition: all 0.3s ease;
+}
+
+/* ========== BASE STYLES ========== */
+body {
+  background: linear-gradient(135deg, var(--darker), var(--dark));
+  color: var(--text-primary);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ========== TYPOGRAPHY ========== */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+/* ========== LAYOUT ========== */
+.container {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mhcn-card {
+  background: rgba(45, 52, 54, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .mhcn-card {
+    padding: 1.5rem;
+    border-radius: 0;
+  }
+}
+
+/* ========== BUTTONS ========== */
+.btn {
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.mhcn-btn {
+  background: var(--primary);
+  color: white;
+}
+
+.mhcn-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-outline-light {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-link {
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* ========== FORMS ========== */
+.form-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-radius: 50px;
+  padding: 0.75rem 1.25rem;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+  color: var(--text-primary);
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-group .form-control {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ========== CHAT INTERFACE ========== */
+.chatroom-list-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chatroom-list-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.chatroom-list-item i {
+  font-size: 1.25rem;
+  color: var(--secondary);
+}
+
+.chat-messages {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 1rem;
+  margin: 1rem -1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--border-radius);
+}
+
+.chat-message {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  transition: var(--transition);
+}
+
+.chat-message:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.chat-message .author {
+  font-weight: 600;
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+}
+
+.chat-message .timestamp {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 0.5rem;
+}
+
+.chat-message .text {
+  margin-top: 0.5rem;
+  word-break: break-word;
+}
+
+.chat-message img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: var(--border-radius);
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* ========== SCROLLBAR ========== */
+.mhcn-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mhcn-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.mhcn-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+.mhcn-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* ========== BADGES ========== */
+.premium-badge {
+  background: linear-gradient(90deg, #fdcb6e, #e17055);
+  color: var(--darker);
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.verified-badge {
+  color: var(--secondary);
+  font-size: 1rem;
+  margin-left: 0.25rem;
+}
+
+/* ========== SPECIAL ELEMENTS ========== */
+.fixed-message {
+  background: rgba(108, 92, 231, 0.2);
+  border-left: 4px solid var(--primary);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mhcn-premium-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, var(--darker), var(--dark));
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--primary);
+  max-width: 90%;
+  width: fit-content;
+}
+
+.mhcn-premium-toast .mhcn-premium-star {
+  color: var(--warning);
+  font-size: 1.25rem;
+}
+
+.mhcn-premium-toast .mhcn-premium-link {
+  color: var(--secondary);
+  text-decoration: underline;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+/* ========== MODAL ========== */
+#premium-theme-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+#premium-theme-modal[style*="display:block"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+#premium-theme-modal > div {
+  background: var(--darker);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: var(--shadow);
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#close-theme-modal {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+#custom-css-input {
+  width: 100%;
+  min-height: 150px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  font-family: monospace;
+  resize: vertical;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mhcn-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.chat-message {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ========== UTILITY CLASSES ========== */
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.ms-2 {
+  margin-left: 0.5rem;
+}
+
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 576px) {
+  .chat-messages {
+    max-height: 50vh;
+  }
+  
+  .input-group {
+    flex-wrap: wrap;
+  }
+  
+  .input-group .btn {
+    flex: 1 0 auto;
+  }
+  
+  .input-group .form-control {
+    min-width: 100%;
+  }
+}
         }
     </style>
 </head>
@@ -344,23 +653,23 @@ function enablePremium(apiKey) {
                 premiumKey = apiKey;
                 localStorage.setItem("mhcn_premium", "1");
                 localStorage.setItem("mhcn_premium_key", apiKey);
-                showPremiumToast("Premium enabled! Enjoy all features.");
+                showToast("Premium enabled! Enjoy all features.");
                 updatePremiumUI();
             } else {
                 isPremium = false;
                 premiumKey = null;
                 localStorage.removeItem("mhcn_premium");
                 localStorage.removeItem("mhcn_premium_key");
-                showPremiumToast("Invalid premium key.", true);
+                showToast("Invalid premium key.", true);
             }
         })
         .catch(error => {
             console.error("⚠️ Error reading keys.json:", error);
-            showPremiumToast("Error validating premium key.", true);
+            showToast("Error validating premium key.", true);
         });
 }
 
-function showPremiumToast(msg, error) {
+function showToast(msg, error = false) {
     let toast = document.createElement("div");
     toast.textContent = msg;
     toast.style.position = "fixed";
@@ -373,8 +682,61 @@ function showPremiumToast(msg, error) {
     toast.style.borderRadius = "1em";
     toast.style.zIndex = 99999;
     toast.style.fontWeight = "bold";
+    toast.style.boxShadow = "0 4px 24px #0008";
     document.body.appendChild(toast);
     setTimeout(() => { toast.remove(); }, 2500);
+}
+
+function showInputToast(msg, defaultValue, callback) {
+    let toast = document.createElement("div");
+    toast.style.position = "fixed";
+    toast.style.bottom = "2em";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.background = "#232336";
+    toast.style.color = "#fff";
+    toast.style.padding = "1.5em 2em 1em 2em";
+    toast.style.borderRadius = "1em";
+    toast.style.zIndex = 99999;
+    toast.style.fontWeight = "bold";
+    toast.style.boxShadow = "0 4px 24px #0008";
+    toast.innerHTML = `<div style='margin-bottom:0.7em;'>${msg}</div>` +
+        `<input type='text' id='input-toast-field' style='width:100%;padding:0.5em;border-radius:0.5em;border:none;margin-bottom:0.7em;' value="${defaultValue ? String(defaultValue).replace(/"/g, '&quot;') : ''}">` +
+        `<div style='text-align:right;'><button id='input-toast-ok' style='background:#6f42c1;color:#fff;border:none;border-radius:0.5em;padding:0.5em 1.2em;font-weight:600;cursor:pointer;'>OK</button></div>`;
+    document.body.appendChild(toast);
+    let input = toast.querySelector('#input-toast-field');
+    input.focus();
+    input.select();
+    toast.querySelector('#input-toast-ok').onclick = () => {
+        let val = input.value;
+        toast.remove();
+        callback(val);
+    };
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            toast.querySelector('#input-toast-ok').click();
+        }
+    });
+}
+
+function showConfirmToast(msg, callback) {
+    let toast = document.createElement("div");
+    toast.style.position = "fixed";
+    toast.style.bottom = "2em";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.background = "#232336";
+    toast.style.color = "#fff";
+    toast.style.padding = "1.5em 2em 1em 2em";
+    toast.style.borderRadius = "1em";
+    toast.style.zIndex = 99999;
+    toast.style.fontWeight = "bold";
+    toast.style.boxShadow = "0 4px 24px #0008";
+    toast.innerHTML = `<div style='margin-bottom:0.7em;'>${msg}</div>` +
+        `<div style='text-align:right;'><button id='confirm-toast-yes' style='background:#6f42c1;color:#fff;border:none;border-radius:0.5em;padding:0.5em 1.2em;font-weight:600;cursor:pointer;margin-right:0.5em;'>Sim</button><button id='confirm-toast-no' style='background:#dc3545;color:#fff;border:none;border-radius:0.5em;padding:0.5em 1.2em;font-weight:600;cursor:pointer;'>Não</button></div>`;
+    document.body.appendChild(toast);
+    toast.querySelector('#confirm-toast-yes').onclick = () => { toast.remove(); callback(true); };
+    toast.querySelector('#confirm-toast-no').onclick = () => { toast.remove(); callback(false); };
 }
 
 function updatePremiumUI() {
@@ -643,7 +1005,7 @@ function showCreateRoom() {
         const roomname = e.target.roomname.value.trim();
         const key = e.target.key.value;
         if (!roomname.match(/^[a-zA-Z0-9_-]+$/)) {
-            alert("Invalid name.");
+            showToast("Invalid name.", true);
             return;
         }
         // Create chatroom on server
@@ -662,14 +1024,14 @@ function showCreateRoom() {
         try {
             data = JSON.parse(text);
         } catch (e) {
-            alert('Error processing server response: ' + text);
+            showToast('Error processing server response: ' + text, true);
             return;
         }
         if (data.success) {
             addChatroomToLocal(roomname, key);
             showEnterRoom(roomname, key);
         } else {
-            alert(data.error || "Error creating chatroom.");
+            showToast(data.error || "Error creating chatroom.", true);
         }
     };
 }
@@ -709,7 +1071,7 @@ function showJoinRoom() {
         try {
             data = JSON.parse(text);
         } catch (e) {
-            alert('Error processing server response: ' + text);
+            showToast('Error processing server response: ' + text, true);
             return;
         }
         if (data.success) {
@@ -720,10 +1082,10 @@ function showJoinRoom() {
                 addChatroomToLocal(roomname, key);
                 showEnterRoom(roomname, key);
             } else {
-                alert("Incorrect encryption key.");
+                showToast("Incorrect encryption key.", true);
             }
         } else {
-            alert(data.error || "Chatroom not found.");
+            showToast(data.error || "Chatroom not found.", true);
         }
     };
 }
@@ -803,10 +1165,10 @@ function showEnterRoom(roomname, key) {
     };
     document.getElementById("send-svg-btn").onclick = async () => {
         const fileInput = document.querySelector('input[name="svgfile"]');
-        if (fileInput.files.length === 0) return alert("Select an SVG file.");
+        if (fileInput.files.length === 0) return showToast("Select an SVG file.", true);
         const file = fileInput.files[0];
         if (file.type !== "image/svg+xml" && !file.name.endsWith(".svg")) {
-            alert("Only SVG files are allowed.");
+            showToast("Only SVG files are allowed.", true);
             return;
         }
         const reader = new FileReader();
@@ -822,10 +1184,10 @@ function showEnterRoom(roomname, key) {
     if (isPremium && premiumFeatures.files) {
         document.getElementById("send-file-btn").onclick = async () => {
             const fileInput = document.querySelector('input[name="fileupload"]');
-            if (fileInput.files.length === 0) return alert("Select a file.");
+            if (fileInput.files.length === 0) return showToast("Select a file.", true);
             const file = fileInput.files[0];
             if (file.size > 2 * 1024 * 1024) {
-                alert("File too large (max 2MB).");
+                showToast("File too large (max 2MB).", true);
                 return;
             }
             const reader = new FileReader();
@@ -846,7 +1208,7 @@ function showEnterRoom(roomname, key) {
         let mediaRecorder, audioChunks = [];
         document.getElementById("send-audio-btn").onclick = async () => {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                alert("Audio recording not supported.");
+                showToast("Audio recording not supported.", true);
                 return;
             }
             let btn = document.getElementById("send-audio-btn");
@@ -877,39 +1239,41 @@ function showEnterRoom(roomname, key) {
     }
     if (isPremium && premiumFeatures.polls) {
         document.getElementById("send-poll-btn").onclick = async () => {
-            let question = prompt("Poll question:");
-            if (!question) return;
-            let options = prompt("Poll options (comma separated):");
-            if (!options) return;
-            let opts = options.split(",").map(s => s.trim()).filter(Boolean);
-            if (opts.length < 2) return alert("At least 2 options required.");
-            await sendMessage(roomname, key, {
-                type: "poll",
-                question,
-                options: opts,
-                votes: Array(opts.length).fill(0)
+            showInputToast("Poll question:", "", function(question) {
+                if (!question) return;
+                showInputToast("Poll options (comma separated):", "", function(options) {
+                    if (!options) return;
+                    let opts = options.split(",").map(s => s.trim()).filter(Boolean);
+                    if (opts.length < 2) return showToast("At least 2 options required.", true);
+                    sendMessage(roomname, key, {
+                        type: "poll",
+                        question,
+                        options: opts,
+                        votes: Array(opts.length).fill(0)
+                    });
+                });
             });
         };
     }
     if (isPremium && premiumFeatures.autoMessages) {
         document.getElementById("auto-message-btn").onclick = () => {
-            let js = prompt("Enter JavaScript for auto message (function send(msg) {...}):", "send('Hello from bot!')");
-            if (!js) return;
-            if (autoMessageInterval) clearInterval(autoMessageInterval);
-            try {
-                // eslint-disable-next-line no-new-func
-                let send = (msg) => sendMessage(roomname, key, {type: "text", text: msg});
-                let fn = new Function("send", js);
-                autoMessageInterval = setInterval(() => { fn(send); }, 5000);
-                showPremiumToast("Auto message bot started.");
-            } catch (e) {
-                alert("Invalid JavaScript.");
-            }
+            showInputToast("Enter JavaScript for auto message (function send(msg) {...}):", "send('Hello from bot!')", function(js) {
+                if (!js) return;
+                if (autoMessageInterval) clearInterval(autoMessageInterval);
+                try {
+                    let send = (msg) => sendMessage(roomname, key, {type: "text", text: msg});
+                    let fn = new Function("send", js);
+                    autoMessageInterval = setInterval(() => { fn(send); }, 5000);
+                    showToast("Auto message bot started.");
+                } catch (e) {
+                    showToast("Invalid JavaScript.", true);
+                }
+            });
         };
     }
     if (isPremium && premiumFeatures.formatting) {
         document.getElementById("format-btn").onclick = () => {
-            alert("Formatting: *bold* _italic_ ~underline~");
+            showToast("Formatting: *bold* _italic_ ~underline~");
         };
     }
     // Load and update messages
@@ -942,15 +1306,15 @@ async function sendMessage(roomname, key, content) {
         try {
             data = JSON.parse(text);
         } catch (e) {
-            alert('Error processing server response: ' + text);
+            showToast('Error processing server response: ' + text, true);
             return;
         }
         if (!data.success) {
-            alert(data.error || "Error sending message.");
+            showToast(data.error || "Error sending message.", true);
         }
     } catch (e) {
         console.error('Network error:', e);
-        alert('Connection error with server.');
+        showToast('Connection error with server.', true);
     }
 }
 
@@ -970,7 +1334,7 @@ async function loadAndRenderMessages(roomname, key, onlyIfChanged = false) {
         try {
             data = JSON.parse(text);
         } catch (e) {
-            console.error('Invalid JSON response:', text);
+            showToast('Error processing server response: ' + text, true);
             document.getElementById("chat-messages").innerHTML = `<div class="text-danger">Error processing server response.</div>`;
             return;
         }
@@ -1055,38 +1419,40 @@ function renderMessages(messages) {
         document.querySelectorAll(".delete-msg-btn").forEach(btn => {
             btn.onclick = async function() {
                 let idx = parseInt(btn.dataset.msgidx);
-                if (!confirm("Delete this message?")) return;
-                // Remove message locally and re-encrypt
-                let roomname = currentRoom, key = currentKey;
-                const resp = await fetch(API_URL, {
-                    method: "POST",
-                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                    body: new URLSearchParams({
-                        action: "get_room",
-                        roomname
-                    })
-                });
-                const text = await resp.text();
-                let data;
-                try { data = JSON.parse(text); } catch {}
-                if (data && data.success) {
-                    let decrypted = await decryptJSON(data.cipher, key);
-                    if (decrypted && Array.isArray(decrypted)) {
-                        decrypted.splice(idx, 1);
-                        const newCipher = await encryptJSON(decrypted, key);
-                        await fetch(API_URL, {
-                            method: "POST",
-                            headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                            body: new URLSearchParams({
-                                action: "send_message",
-                                roomname,
-                                key,
-                                message: JSON.stringify({type: "__replace__", data: decrypted})
-                            })
-                        });
-                        loadAndRenderMessages(roomname, key, false);
+                showConfirmToast("Delete this message?", async function(confirmed) {
+                    if (!confirmed) return;
+                    // Remove message localmente e re-encripta
+                    let roomname = currentRoom, key = currentKey;
+                    const resp = await fetch(API_URL, {
+                        method: "POST",
+                        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                        body: new URLSearchParams({
+                            action: "get_room",
+                            roomname
+                        })
+                    });
+                    const text = await resp.text();
+                    let data;
+                    try { data = JSON.parse(text); } catch {}
+                    if (data && data.success) {
+                        let decrypted = await decryptJSON(data.cipher, key);
+                        if (decrypted && Array.isArray(decrypted)) {
+                            decrypted.splice(idx, 1);
+                            const newCipher = await encryptJSON(decrypted, key);
+                            await fetch(API_URL, {
+                                method: "POST",
+                                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                                body: new URLSearchParams({
+                                    action: "send_message",
+                                    roomname,
+                                    key,
+                                    message: JSON.stringify({type: "__replace__", data: decrypted})
+                                })
+                            });
+                            loadAndRenderMessages(roomname, key, false);
+                        }
                     }
-                }
+                });
             };
         });
     }
@@ -1094,7 +1460,7 @@ function renderMessages(messages) {
         document.querySelectorAll(".pin-msg-btn").forEach(btn => {
             btn.onclick = async function() {
                 let idx = parseInt(btn.dataset.msgidx);
-                // Pin message locally and re-encrypt
+                // Pin message locally e re-encripta
                 let roomname = currentRoom, key = currentKey;
                 const resp = await fetch(API_URL, {
                     method: "POST",
@@ -1248,12 +1614,13 @@ showHome();
 // Premium button logic
 document.getElementById("premium-btn").onclick = function() {
     if (isPremium) {
-        alert("Premium is already enabled!");
+        showToast("Premium is already enabled!");
         return;
     }
-    let key = prompt("Enter your premium key:");
-    if (!key) return;
-    enablePremium(key);
+    showInputToast("Enter your premium key:", "", function(key) {
+        if (!key) return;
+        enablePremium(key);
+    });
 };
 
 applyCustomTheme();
