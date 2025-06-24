@@ -1,4 +1,4 @@
-const defaultCorpus = [
+window.defaultCorpus = [
   // Greetings & Identity
   {q: "Hello", a: "Hi! How can I help you today?"},
   {q: "Hi", a: "Hello! How may I assist you?"},
