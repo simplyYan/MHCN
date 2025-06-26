@@ -696,9 +696,98 @@ if (!empty($action)) {
             height: auto;
             vertical-align: bottom;
         }
+        /* Toast styles */
+        .toast-container {
+            position: fixed;
+            z-index: 9999;
+            right: 1.5rem;
+            bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+        .toast {
+            min-width: 220px;
+            max-width: 350px;
+            background: var(--bg-secondary, #22223b);
+            color: var(--text, #fff);
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 16px 0 rgba(0,0,0,0.18);
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: toastIn 0.25s forwards;
+            pointer-events: auto;
+            border: 1px solid var(--primary, #6d28d9);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .toast.toast-error {
+            border-color: #e11d48;
+        }
+        .toast.toast-success {
+            border-color: #22c55e;
+        }
+        .toast.toast-info {
+            border-color: #2563eb;
+        }
+        .toast .toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        @keyframes toastIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .toast-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        .toast-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid var(--border, #334155);
+            background: var(--bg, #18181b);
+            color: var(--text, #fff);
+            font-size: 1rem;
+        }
+        .toast-input-btns {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+        .toast-input-btn {
+            padding: 0.4rem 1.1rem;
+            border-radius: 0.375rem;
+            border: none;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            background: var(--primary, #6d28d9);
+            color: #fff;
+            transition: background 0.2s;
+        }
+        .toast-input-btn.cancel {
+            background: #64748b;
+        }
     </style>
 </head>
 <body class="min-h-screen font-default flex flex-col">
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
     <!-- Navigation Bar -->
     <nav class="bg-secondary border-b border-secondary py-4 px-6 flex justify-between items-center">
         <div class="flex items-center space-x-2">
@@ -787,7 +876,6 @@ if (!empty($action)) {
                             </button>
                         </div>
                     </div>
-                    
                     <div id="chatRoomPanel" class="hidden bg-secondary rounded-lg border border-secondary flex flex-col" style="min-height: 600px;">
                         <div class="border-b border-secondary p-4 flex justify-between items-center">
                             <h2 id="currentRoomName" class="text-lg font-semibold"></h2>
@@ -1245,6 +1333,56 @@ if (!empty($action)) {
 
     <!-- Scripts -->
     <script>
+        // Toast functions
+        function showToast(message, type = 'info', duration = 3500) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span>${message}</span><button class="toast-close" onclick="this.parentElement.remove()">&times;</button>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        function showToastInput(message, placeholder = '', type = 'info', confirmText = 'OK', cancelText = 'Cancel') {
+            return new Promise((resolve, reject) => {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.style.minWidth = '260px';
+                toast.innerHTML = `
+                    <div class="toast-input-group">
+                        <span>${message}</span>
+                        <input class="toast-input" type="password" placeholder="${placeholder}">
+                        <div class="toast-input-btns">
+                            <button class="toast-input-btn">${confirmText}</button>
+                            <button class="toast-input-btn cancel">${cancelText}</button>
+                        </div>
+                    </div>
+                `;
+                const input = toast.querySelector('.toast-input');
+                const okBtn = toast.querySelector('.toast-input-btn:not(.cancel)');
+                const cancelBtn = toast.querySelector('.toast-input-btn.cancel');
+                okBtn.onclick = () => {
+                    const val = input.value;
+                    toast.remove();
+                    resolve(val);
+                };
+                cancelBtn.onclick = () => {
+                    toast.remove();
+                    resolve(null);
+                };
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') okBtn.click();
+                    if (e.key === 'Escape') cancelBtn.click();
+                });
+                setTimeout(() => input.focus(), 100);
+                container.appendChild(toast);
+            });
+        }
+
         // Global variables
         let currentRoom = null;
         let currentEncryptionKey = null;
@@ -1320,15 +1458,15 @@ if (!empty($action)) {
                 const data = await response.json();
                 
                 if (data.status === 'success') {
-                    alert(data.message);
+                    showToast(data.message, 'success');
                     hideModal('registerModal');
                     showModal('loginModal');
                 } else {
-                    alert(data.message);
+                    showToast(data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while trying to register. Please try again.');
+                showToast('An error occurred while trying to register. Please try again.', 'error');
             }
         }
         
@@ -1348,11 +1486,11 @@ if (!empty($action)) {
                 if (data.status === 'success') {
                     window.location.reload();
                 } else {
-                    alert(data.message);
+                    showToast(data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while trying to login. Please try again.');
+                showToast('An error occurred while trying to login. Please try again.', 'error');
             }
         }
         
@@ -1373,7 +1511,7 @@ if (!empty($action)) {
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while trying to logout. Please try again.');
+                showToast('An error occurred while trying to logout. Please try again.', 'error');
             }
         }
         
@@ -1392,15 +1530,15 @@ if (!empty($action)) {
                 const data = await response.json();
                 
                 if (data.status === 'success') {
-                    alert(data.message);
+                    showToast(data.message, 'success');
                     hideModal('createRoomModal');
                     window.location.reload();
                 } else {
-                    alert(data.message);
+                    showToast(data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while trying to create the room. Please try again.');
+                showToast('An error occurred while trying to create the room. Please try again.', 'error');
             }
         }
         
@@ -1415,9 +1553,9 @@ if (!empty($action)) {
             } else {
                 // Called via click on saved room
                 if (!encryptionKey) {
-                    encryptionKey = prompt('Enter the room encryption key:');
+                    encryptionKey = await showToastInput('Enter the room encryption key:', 'Encryption key', 'info', 'Join', 'Cancel');
                     if (!encryptionKey) {
-                        alert('Key required!');
+                        showToast('Key required!', 'error');
                         return;
                     }
                 }
@@ -1449,11 +1587,11 @@ if (!empty($action)) {
                     messageInterval = setInterval(loadMessages, 3000);
                     hideModal('joinRoomModal');
                 } else {
-                    alert(data.message);
+                    showToast(data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while trying to join the room. Please try again.');
+                showToast('An error occurred while trying to join the room. Please try again.', 'error');
             }
         }
         
@@ -1649,7 +1787,7 @@ if (!empty($action)) {
 
             } catch (error) {
                 console.error('Error sending message:', error);
-                alert('An error occurred while sending the message. Please try again.');
+                showToast('An error occurred while sending the message. Please try again.', 'error');
             } finally {
                 messageInput.value = '';
                 fileInput.value = '';
@@ -1671,7 +1809,7 @@ if (!empty($action)) {
             const data = await response.json();
             
             if (data.status !== 'success') {
-                alert(data.message);
+                showToast(data.message, 'error');
             } else {
                 loadMessages();
             }
@@ -1698,7 +1836,7 @@ if (!empty($action)) {
                 document.getElementById('cameraPreview').srcObject = stream;
             } catch (error) {
                 console.error('Error accessing camera:', error);
-                alert('Could not access the camera. Check permissions.');
+                showToast('Could not access the camera. Check permissions.', 'error');
                 hideCameraSection();
             }
         }
@@ -1735,7 +1873,7 @@ if (!empty($action)) {
             const optionCount = optionsContainer.children.length;
             
             if (optionCount >= 10) {
-                alert('Maximum of 10 options allowed');
+                showToast('Maximum of 10 options allowed', 'error');
                 return;
             }
             
@@ -1763,7 +1901,7 @@ if (!empty($action)) {
             if (optionsContainer.children.length > 2) {
                 button.parentElement.remove();
             } else {
-                alert('The poll must have at least 2 options');
+                showToast('The poll must have at least 2 options', 'error');
             }
         }
         
@@ -1772,7 +1910,7 @@ if (!empty($action)) {
             
             const question = document.getElementById('pollQuestion').value.trim();
             if (!question) {
-                alert('Enter the poll question');
+                showToast('Enter the poll question', 'error');
                 return;
             }
             
@@ -1784,7 +1922,7 @@ if (!empty($action)) {
             });
             
             if (options.length < 2) {
-                alert('The poll must have at least 2 options');
+                showToast('The poll must have at least 2 options', 'error');
                 return;
             }
             
@@ -1840,14 +1978,14 @@ if (!empty($action)) {
                 const data = await response.json();
                 
                 if (data.status === 'success') {
-                    alert(data.message);
+                    showToast(data.message, 'success');
                     hideModal('changePasswordModal');
                 } else {
-                    alert(data.message);
+                    showToast(data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while trying to change the password. Please try again.');
+                showToast('An error occurred while trying to change the password. Please try again.', 'error');
             }
         }
         
